@@ -15,6 +15,12 @@ public class ResponseSearchItem {
 	private String studyUnitId;
 
 	private String dataCollectionId;
+	
+	private String subgroupLabel;
+	
+	private String studyUnitLabel;
+	
+	private String dataCollectionLabel;
 
 	private String type;
 
@@ -110,6 +116,30 @@ public class ResponseSearchItem {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSubgroupLabel() {
+		return subgroupLabel;
+	}
+
+	public void setSubgroupLabel(String subgroupLabel) {
+		this.subgroupLabel = subgroupLabel;
+	}
+
+	public String getStudyUnitLabel() {
+		return studyUnitLabel;
+	}
+
+	public void setStudyUnitLabel(String studyUnitLabel) {
+		this.studyUnitLabel = studyUnitLabel;
+	}
+
+	public String getDataCollectionLabel() {
+		return dataCollectionLabel;
+	}
+
+	public void setDataCollectionLabel(String dataCollectionLabel) {
+		this.dataCollectionLabel = dataCollectionLabel;
 	}
 
 }
