@@ -53,7 +53,7 @@ public class XMLToJSONImpl implements XMLToJSON {
 //            JSONParser parser = new JSONParser();
 //            JSONObject questionnaire = (JSONObject) parser.parse(input);
 //            questionnaire = JSONFunctions.renameQuestionnairePlural(questionnaire);
-            return translator.translate(input);
+            return translator.translateCodeList(input);
         } catch (Exception e) {
         	e.printStackTrace();
             throw new Exception(String.format("%s:%s", getClass().getName(), e.getMessage()));

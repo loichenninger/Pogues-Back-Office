@@ -248,14 +248,14 @@ public class PoguesMetadata {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "getCodeList", notes = "Gets the code-list with id {id}", response = String.class)
 	public Response getCodeList(@PathParam(value = "id") String id) throws Exception {
-		String codeList = metadataService.getCodeList(id);
+		String codeList = metadataService.getDDIDocument(id);
 		PipeLine pipeline = new PipeLine();
 		Map<String, Object> params = new HashMap<>();
 		try {
 			StreamingOutput stream = output -> {
 				try {
-//					output.write(pipeline.from(codeList).map(ddiToXML::transform, params,"codeList")
-//							.map(xmlToJSON::transform, params,"codeList").transform().getBytes());
+					output.write(pipeline.from(codeList).map(ddiToXML::transform, params,"codeList")
+							.map(xmlToJSON::transform, params,"codeList").transform().getBytes());
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					throw new PoguesException(500, e.getMessage(), null);

@@ -49,11 +49,7 @@ public class MetadataServiceImpl implements MetadataService {
 
 	@Override
 	public String getCodeList(String id) throws Exception {
-		
 		String codeList = metadataRepository.getCodeList(id);
-		
-		
-		
 		return null;
 	}
 }
