@@ -7,10 +7,10 @@
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
     <xsl:template match="/*">
-        <xsl:apply-templates select="//r:CodeList"/>
+        <xsl:apply-templates select="//l:CodeList"/>
     </xsl:template>
 
-    <xsl:template match="r:CodeList">
+    <xsl:template match="l:CodeList">
         <CodeList id="{r:ID}">
             <Name>
                 <xsl:value-of select="r:UserID"/>
@@ -78,7 +78,7 @@
 
     <xsl:template name="labelCodeListFormated">
         <xsl:param name="ID"/>
-        <xsl:apply-templates select="//r:CodeList[r:ID=$ID]/r:Label/r:Content"/>
+        <xsl:apply-templates select="//l:CodeList[r:ID=$ID]/r:Label/r:Content"/>
     </xsl:template>
 
 </xsl:transform>
