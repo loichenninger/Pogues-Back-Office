@@ -2,10 +2,11 @@ package fr.insee.pogues.webservice.rest;
 
 import fr.insee.pogues.user.model.User;
 import fr.insee.pogues.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -23,7 +24,7 @@ import javax.ws.rs.core.Response.Status;
 
 @Component
 @Path("/user")
-@Api(value = "Pogues Users")
+@Tag(name = "Pogues Users")
 public class PoguesUser {
 
 
@@ -39,14 +40,14 @@ public class PoguesUser {
     @GET
     @Path("id")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    @ApiOperation(
-            value = "Get current user id",
-            notes = "Get the user id of the current session user",
-            response = String.class
+    @Operation(
+    		operationId = "getID",
+            summary = "Get current user id",
+            description = "Get the user id of the current session user"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created"),
-            @ApiResponse(code = 403, message = "Not authenticated")
+            @ApiResponse(responseCode = "200", description = "Created"),
+            @ApiResponse(responseCode = "403", description = "Not authenticated")
     })
     public Response getID() throws Exception {
         try {
@@ -62,14 +63,14 @@ public class PoguesUser {
     @GET
     @Path("attributes")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(
-            value = "Get current user attribute",
-            notes = "Get the user id of the current session user",
-            response = String.class
+    @Operation(
+    		operationId = "getAttribute",
+            summary = "Get current user attribute",
+            description = "Get the user id of the current session user"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created"),
-            @ApiResponse(code = 403, message = "Not authenticated")
+            @ApiResponse(responseCode = "200", description = "Created"),
+            @ApiResponse(responseCode = "403", description = "Not authenticated")
     })
     public Response getAttribute() throws Exception {
         try {
@@ -86,14 +87,15 @@ public class PoguesUser {
     @GET
     @Path("permissions")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(
-            value = "Get all permissions",
-            notes = "Get a list of available permissions",
+    @Operation(
+    		operationId = "getPermissions",
+            summary = "Get all permissions",
+            description = "Get a list of available permissions"/*,
             response = String.class,
-            responseContainer = "List"
+            responseContainer = "List"*/
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(responseCode = "200", description = "Success"),
     })
     public Response getPermissions() throws Exception {
         try {
