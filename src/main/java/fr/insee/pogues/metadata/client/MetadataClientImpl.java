@@ -38,12 +38,12 @@ public class MetadataClientImpl implements MetadataClient {
     String apiKey;
 
     public ColecticaItem getItem(String id) throws Exception {
-        String url = String.format("%s/meta-data/item/%s", serviceUrl, id);
+        String url = String.format("%s/meta-data/colectica-item/%s", serviceUrl, id);
         return restTemplate.getForObject(url, ColecticaItem.class);
     }
 
     public List<ColecticaItem> getItems(ColecticaItemRefList query) throws Exception {
-        String url = String.format("%s/meta-data/items", serviceUrl);
+        String url = String.format("%s/meta-data/colectica-items", serviceUrl);
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-type", ContentType.APPLICATION_JSON.getMimeType());
         HttpEntity<ColecticaItemRefList> request = new HttpEntity<>(query, headers);
@@ -53,7 +53,7 @@ public class MetadataClientImpl implements MetadataClient {
     }
 
     public ColecticaItemRefList getChildrenRef(String id) throws Exception {
-        String url = String.format("%s/meta-data/item/%s/refs", serviceUrl, id);
+        String url = String.format("%s/meta-data/colectica-item/%s/refs", serviceUrl, id);
         System.out.println(url);
         ResponseEntity<ColecticaItemRefList>  response;
         response = restTemplate
