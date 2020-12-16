@@ -53,6 +53,27 @@ public class QuestionnairesServiceQueryPostgresqlImpl implements QuestionnairesS
 		}
 	}
 
+	
+	/**
+	 * A method to get the questionnaire with an id
+	 * 
+	 * @param id
+	 *            id of the questionnaire
+	 * @return the JSON description of the questionnaire
+	 */
+	public JSONObject getJsonLunaticByID(String id) throws Exception {
+		try {
+			String qString = "SELECT data_lunatic FROM visu_lunatic WHERE id=?";
+			PGobject q = jdbcTemplate.queryForObject(qString,
+					new Object[]{id}, PGobject.class);
+			return (JSONObject) (new JSONParser().parse(q.toString()));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	
+	
 	/**
 	 * A method to delete the questionnaire with an id
 	 * 
@@ -102,7 +123,21 @@ public class QuestionnairesServiceQueryPostgresqlImpl implements QuestionnairesS
 		q.setType("json");
 		q.setValue(questionnaire.toJSONString());
 		jdbcTemplate.update(qString, id, q);
-	}
+    }
+	
+	
+	public void createJsonLunatic(JSONObject data_lunatic) throws Exception {
+		String qString =
+				"INSERT INTO visu_lunatic (id, data_lunatic) VALUES (?, ?)";
+	    String id  = (String)data_lunatic.get("id");
+		if(null != getJsonLunaticByID(id)){
+			throw new NonUniqueResultException("Entity already exists");
+		}
+		PGobject q = new PGobject();
+		q.setType("json");
+		q.setValue(data_lunatic.toJSONString());
+		jdbcTemplate.update(qString, id, q);
+    }
 
 	public void updateQuestionnaire(String id, JSONObject questionnaire) throws Exception {
 		String qString = "UPDATE pogues SET data=? WHERE id=?";
@@ -113,7 +148,18 @@ public class QuestionnairesServiceQueryPostgresqlImpl implements QuestionnairesS
 		if (0 == r) {
 			throw new NonUniqueResultException("Entity already exists");
 		}
-	}
+    }
+    
+    public void updateJsonLunatic(String id, JSONObject data_lunatic) throws Exception {
+       	String qString = "UPDATE visu_lunatic SET data_lunatic=? WHERE id=?";
+		PGobject q = new PGobject();
+		q.setType("json");
+		q.setValue(data_lunatic.toJSONString());
+		int r = jdbcTemplate.update(qString, q, id);
+		if(0 == r) {
+			throw new NonUniqueResultException("Entity already exists");
+		}
+    }
 
 	private List<JSONObject> PgToJSON(List<PGobject> data) {
 		return Lists.transform(data, q -> {
