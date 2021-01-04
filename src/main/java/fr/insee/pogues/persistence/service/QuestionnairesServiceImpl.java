@@ -73,6 +73,10 @@ public class QuestionnairesServiceImpl implements QuestionnairesService {
 	public void deleteQuestionnaireByID(String id) throws Exception {
 		questionnaireServiceQuery.deleteQuestionnaireByID(id);
 	}
+	
+	public void deleteJsonLunaticByID(String id) throws Exception {
+		questionnaireServiceQuery.deleteJsonLunaticByID(id);		
+	}
 
 	public void createQuestionnaire(JSONObject questionnaire) throws Exception {
 		try {

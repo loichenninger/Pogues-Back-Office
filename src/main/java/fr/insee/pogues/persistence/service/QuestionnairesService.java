@@ -45,6 +45,13 @@ public interface QuestionnairesService {
      * @throws Exception
      */
     void deleteQuestionnaireByID(String id) throws Exception;
+    
+    /**
+    *
+    * @param id Id of the object we want to delete
+    * @throws Exception
+    */
+   void deleteJsonLunaticByID(String id) throws Exception;
 
     /**
      * Create a questionnaire object
@@ -68,11 +75,11 @@ public interface QuestionnairesService {
      */
     void updateQuestionnaire(String id, JSONObject questionnaire) throws Exception;
 
-/**
- * Update a questionnaire object
- * @param questionnaire
- * @throws Exception
- */
-void updateJsonLunatic(String id, JSONObject dataLunatic) throws Exception;
+	/**
+	 * Update a questionnaire object
+	 * @param questionnaire
+	 * @throws Exception
+	 */
+	void updateJsonLunatic(String id, JSONObject dataLunatic) throws Exception;
 }
 
