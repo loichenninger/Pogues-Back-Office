@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import fr.insee.pogues.persistence.service.QuestionnairesService;
@@ -28,6 +29,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 /**
  * WebService class for the Instrument Persistence
@@ -54,8 +56,10 @@ public class PoguesPersistence {
     @Autowired
 	private QuestionnairesService questionnaireService;
 
-
-    @GET
+    @Autowired
+    Environment env;
+    
+	@GET
 	@Path("questionnaire/{id}")
     @Produces(MediaType.APPLICATION_JSON)
 	@Operation(
@@ -233,7 +237,6 @@ public class PoguesPersistence {
 			logger.info("Questionnaire "+ id +" deleted");
 			return Response.status(Status.NO_CONTENT).build();
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -283,7 +286,6 @@ public class PoguesPersistence {
 			logger.info("Json Lunatic of questionnaire "+ id +" updated");
 			return Response.status(Status.NO_CONTENT).build();
         } catch (Exception e) {
-			logger.error(e.getMessage(), e);
             throw e;
         }
 	}
@@ -334,9 +336,10 @@ public class PoguesPersistence {
 	) throws Exception {
         try {
 			questionnaireService.createQuestionnaire(jsonContent);
-			//TODO return a generic uri
 			String id = (String) jsonContent.get("id");
-			String uriQuestionnaire = "http://dvrmspogfolht01.ad.insee.intra/rmspogfo/pogues/persistence/questionnaire/"+id;
+			String dbHost = env.getProperty("fr.insee.pogues.persistence.database.host");
+			String apiName = env.getProperty("fr.insee.pogues.api.name");
+			String uriQuestionnaire = String.format("http://%s%s/persistence/questionnaire/%s",dbHost,apiName,id);
 			logger.debug("New questionnaire created , uri :" + uriQuestionnaire);
 			return Response.status(Status.CREATED).header("Location", uriQuestionnaire).build();
 		} catch (Exception e) {
@@ -361,9 +364,10 @@ public class PoguesPersistence {
 	) throws Exception {
         try {
 			questionnaireService.createJsonLunatic(jsonContent);
-			//TODO return a generic uri
 			String id = (String) jsonContent.get("id");
-			String uriJsonLunaticQuestionnaire = "http://dvrmspogfolht01.ad.insee.intra/rmspogfo/pogues/persistence/questionnaire/json-lunatic/"+id;
+			String dbHost = env.getProperty("fr.insee.pogues.persistence.database.host");
+			String apiName = env.getProperty("fr.insee.pogues.api.name");
+			String uriJsonLunaticQuestionnaire = String.format("http://%s%s/persistence/questionnaire/json-lunatic/%s",dbHost,apiName,id);
 			logger.debug("New Json Lunatic created , uri :" + uriJsonLunaticQuestionnaire);
 			return Response.status(Status.CREATED).header("Location", uriJsonLunaticQuestionnaire).build();
 		} catch (Exception e) {
