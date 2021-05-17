@@ -8,6 +8,7 @@ import fr.insee.pogues.search.model.DDIItem;
 import fr.insee.pogues.search.model.DataCollectionContext;
 import fr.insee.pogues.search.model.PoguesQuery;
 import fr.insee.pogues.search.model.ResponseSearchItem;
+import fr.insee.pogues.search.model.SolrResult;
 
 public interface PoguesItemRepository {
 
@@ -20,4 +21,6 @@ public interface PoguesItemRepository {
 	List<DDIItem> getDataCollections(String operationId) throws Exception;
 
 	DataCollectionContext getDataCollectionContext(String dataCollectionId) throws Exception;
+	
+	List<SolrResult> getSolrResults(String label) throws Exception;
 }

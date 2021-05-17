@@ -10,6 +10,7 @@ import fr.insee.pogues.search.model.DDIItem;
 import fr.insee.pogues.search.model.DataCollectionContext;
 import fr.insee.pogues.search.model.PoguesQuery;
 import fr.insee.pogues.search.model.ResponseSearchItem;
+import fr.insee.pogues.search.model.SolrResult;
 import fr.insee.pogues.search.repository.PoguesItemRepository;
 
 
@@ -41,6 +42,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public DataCollectionContext getDataCollectionContext(String dataCollectionId) throws Exception{
     	 return poguesItemRepository.getDataCollectionContext(dataCollectionId);
+    }
+    
+    @Override
+    public List<SolrResult> getSolrResults(String label) throws Exception {
+    	return poguesItemRepository.getSolrResults(label);
     }
     
 }

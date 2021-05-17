@@ -4,6 +4,7 @@ import fr.insee.pogues.search.model.DDIItem;
 import fr.insee.pogues.search.model.DataCollectionContext;
 import fr.insee.pogues.search.model.PoguesQuery;
 import fr.insee.pogues.search.model.ResponseSearchItem;
+import fr.insee.pogues.search.model.SolrResult;
 
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,14 @@ public class PoguesItemRepositoryImpl implements PoguesItemRepository {
         ResponseEntity<DataCollectionContext> response = restTemplate
                 .exchange(url, HttpMethod.GET, null, DataCollectionContext.class);
         return response.getBody();
+	}
+    
+    @Override
+	public List<SolrResult> getSolrResults(String label) throws Exception {
+    	String url = String.format("%s/search/items/%s", serviceUrl, label);
+        ResponseEntity<SolrResult[]> response = restTemplate
+                .exchange(url, HttpMethod.GET, null, SolrResult[].class);
+        return Arrays.asList(response.getBody());
 	}
 
 }
