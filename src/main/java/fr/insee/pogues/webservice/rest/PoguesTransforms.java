@@ -146,9 +146,11 @@ public class PoguesTransforms {
 	@Path("visualize-queen/{questionnaire}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	@ApiOperation(value = "Get visualization URI Queen from JSON serialized Pogues entity", notes = "dataCollection MUST refer to the name attribute owned by the nested DataCollectionObject")
-	@ApiImplicitParams(value = {
-			@ApiImplicitParam(name = "json body", value = "JSON representation of the Pogues Model", paramType = "body", dataType = "org.json.simple.JSONObject") })
+	@Operation(operationId = "visualizeQueenFromBody", summary = "Get visualization URI Queen from JSON serialized Pogues entity", description = "dataCollection MUST refer to the name attribute owned by the nested DataCollectionObject")
+	@RequestBody(
+			description = "JSON representation of the Pogues Model",
+			content = @Content(mediaType = "application/json")
+			)
 	public Response visualizeQueenFromBody(@Context final HttpServletRequest request,
 			@PathParam(value = "questionnaire") String questionnaire) throws Exception {
 		PipeLine pipeline = new PipeLine();
@@ -178,9 +180,11 @@ public class PoguesTransforms {
 	@Path("visualize-stromae-v2/{questionnaire}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	@ApiOperation(value = "Get visualization URI Queen from JSON serialized Pogues entity", notes = "dataCollection MUST refer to the name attribute owned by the nested DataCollectionObject")
-	@ApiImplicitParams(value = {
-			@ApiImplicitParam(name = "json body", value = "JSON representation of the Pogues Model", paramType = "body", dataType = "org.json.simple.JSONObject") })
+	@Operation(operationId = "visualizeStromaeV2FromBody", summary = "Get visualization URI Queen from JSON serialized Pogues entity", description = "dataCollection MUST refer to the name attribute owned by the nested DataCollectionObject")
+	@RequestBody(
+			description = "JSON representation of the Pogues Model",
+			content = @Content(mediaType = "application/json")
+			)
 	public Response visualizeStromaeV2FromBody(@Context final HttpServletRequest request,
 			@PathParam(value = "questionnaire") String questionnaire) throws Exception {
 		PipeLine pipeline = new PipeLine();
