@@ -88,17 +88,17 @@ public class PoguesPersistence {
 	@GET
 	@Path("questionnaire/json-lunatic/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(
-	        value = "Get questionnaire",
-            notes = "Gets the questionnaire with id JsonLunatic {id}",
-            response = String.class
+	@Operation(
+			operationId = "getJsonLunatic",
+	        summary = "Get questionnaire",
+            description = "Gets the questionnaire with id JsonLunatic {id}"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 404, message = "Not found")
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
 	public Response getJsonLunatic(
-			@ApiParam(value = "This is the id of the object we want to retrieve", required = true)
+			@Parameter(description = "This is the id of the object we want to retrieve", required = true)
 			@PathParam(value = "id") String id
 	) throws Exception {
 		try {
@@ -219,17 +219,17 @@ public class PoguesPersistence {
 	
 	@DELETE
 	@Path("questionnaire/json-lunatic/{id}")
-	@ApiOperation(
-	        value = "Delete Json Lunatic of a questionnaire",
-            notes = "Delete Json Lunatic of a  questionnaire with id {id}"
+	@Operation(
+			operationId = "deleteJsonLunatic",
+	        summary = "Delete Json Lunatic of a questionnaire",
+            description = "Delete Json Lunatic of a  questionnaire with id {id}"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "No content"),
-            @ApiResponse(code = 404, message = "Not found")
+            @ApiResponse(responseCode = "204", description = "No content"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
-//	@OwnerRestricted
 	public Response deleteJsonLunatic(
-			@ApiParam(value = "The id of the object that need to be deleted", required = true)
+			@Parameter(description = "The id of the object that need to be deleted", required = true)
 			@PathParam(value = "id") String id
 	) throws Exception {
 		try {
@@ -267,19 +267,19 @@ public class PoguesPersistence {
 	@Path("questionnaire/json-lunatic/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(
-	        value = "Update Json Lunatic",
-            notes = "Update Json Lunatic of a `Questionnaire` object with id {id}"
+	@Operation(
+			operationId = "updateJsonLunatic",
+	        summary = "Update Json Lunatic",
+            description = "Update Json Lunatic of a `Questionnaire` object with id {id}"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 404, message = "Not found")
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
-//	@OwnerRestricted
 	public Response updateJsonLunatic(
-			@ApiParam(value = "The id of the questionnaire which json lunatic needs to be updated", required = true)
+			@Parameter(description = "The id of the questionnaire which json lunatic needs to be updated", required = true)
 			@PathParam(value = "id") String id,
-			@ApiParam(value = "Json Lunatic to be updated") JSONObject jsonLunatic
+			@Parameter(description = "Json Lunatic to be updated") JSONObject jsonLunatic
 	) throws Exception {
         try {
 			questionnaireService.updateJsonLunatic(id, jsonLunatic);
@@ -351,16 +351,17 @@ public class PoguesPersistence {
 	@POST
 	@Path("questionnaires/json-lunatic")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(
-	        value = "Create Json Lunatic of questionnaire",
-            notes = "Creates a new Json Lunatic entry"
+	@Operation(
+			operationId = "createJsonLunatic",
+	        summary = "Create Json Lunatic of questionnaire",
+            description = "Creates a new Json Lunatic entry"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 400, message = "Entity already exists")
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "400", description = "Entity already exists")
     })
 	public Response createJsonLunatic(
-			@ApiParam(value = "New Instrument Object", required = true) JSONObject jsonContent
+			@Parameter(description = "New Instrument Object", required = true) JSONObject jsonContent
 	) throws Exception {
         try {
 			questionnaireService.createJsonLunatic(jsonContent);
