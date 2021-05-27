@@ -43,7 +43,8 @@ public class OpenIDConnectSecurityContext extends KeycloakWebSecurityConfigurerA
 		if (requireSSL)
 			http.antMatcher("/**").requiresChannel().anyRequest().requiresSecure();
 		http.sessionManagement().disable();
-		http.authorizeRequests().antMatchers("/api/init").permitAll().antMatchers("/swagger-ui/**").permitAll()
+		http.authorizeRequests().antMatchers("/pogues/persistence/questionnaire/json-lunatic/**").permitAll()
+				.antMatchers("/api/init").permitAll().antMatchers("/swagger-ui/**").permitAll()
 				.antMatchers("/pogues/openapi.json").permitAll().anyRequest().authenticated();
 	}
 
@@ -57,8 +58,7 @@ public class OpenIDConnectSecurityContext extends KeycloakWebSecurityConfigurerA
 	}
 
 	/**
-	 * Registers the KeycloakAuthenticationProvider with the authentication
-	 * manager.
+	 * Registers the KeycloakAuthenticationProvider with the authentication manager.
 	 */
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -66,23 +66,23 @@ public class OpenIDConnectSecurityContext extends KeycloakWebSecurityConfigurerA
 		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
 		auth.authenticationProvider(keycloakAuthenticationProvider);
 	}
-	
+
 	/**
 	 * Defines the keycloak authentication provider
 	 */
 	@Override
-    @Bean
-    public KeycloakUserDetailsAuthenticationProvider keycloakAuthenticationProvider() {
-        logger.info("adding keycloak authentication provider");
-        return new KeycloakUserDetailsAuthenticationProvider();
-    }
-	
+	@Bean
+	public KeycloakUserDetailsAuthenticationProvider keycloakAuthenticationProvider() {
+		logger.info("adding keycloak authentication provider");
+		return new KeycloakUserDetailsAuthenticationProvider();
+	}
+
 	/**
 	 * Defines the keycloak configuration
 	 */
-    @Bean
+	@Bean
 	public KeycloakConfigResolver keycloakConfigResolver() {
 		logger.info("adding Pogues keycloak config resolver");
-        return new PoguesKeycloakConfigResolver();
+		return new PoguesKeycloakConfigResolver();
 	}
 }
