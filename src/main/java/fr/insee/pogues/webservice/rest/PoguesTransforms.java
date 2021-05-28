@@ -180,7 +180,7 @@ public class PoguesTransforms {
 	@Path("visualize-stromae-v2/{questionnaire}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_XML)
-	@Operation(operationId = "visualizeStromaeV2FromBody", summary = "Get visualization URI Queen from JSON serialized Pogues entity", description = "dataCollection MUST refer to the name attribute owned by the nested DataCollectionObject")
+	@Operation(operationId = "visualizeStromaeV2FromBody", summary = "Get visualization URI Queen from JSON serialized Pogues entity")
 	@RequestBody(
 			description = "JSON representation of the Pogues Model",
 			content = @Content(mediaType = "application/json")
@@ -197,6 +197,37 @@ public class PoguesTransforms {
 							.map(jsonToXML::transform, params, questionnaire.toLowerCase())
 							.map(poguesXMLToDDI::transform, params, questionnaire.toLowerCase())
 							.map(ddiToLunaticJSON::transform, params, questionnaire.toLowerCase())
+							.map(lunaticJSONToUriStromaeV2::transform, params, questionnaire.toLowerCase()).transform().getBytes());
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					throw new PoguesException(500, e.getMessage(), null);
+				}
+			};
+			return Response.ok(stream).build();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	@POST
+	@Path("visualize-stromae-v2/{questionnaire}/json-lunatic")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_XML)
+	@Operation(operationId = "visualizeStromaeV2FromJsonLunatic", summary = "Get visualization URI Queen from JSON Lunatic entity")
+	@RequestBody(
+			description = "JSON representation of the Pogues Model",
+			content = @Content(mediaType = "application/json")
+			)
+	public Response visualizeStromaeV2FromJsonLunatic(@Context final HttpServletRequest request,
+			@PathParam(value = "questionnaire") String questionnaire) throws Exception {
+		PipeLine pipeline = new PipeLine();
+		Map<String, Object> params = new HashMap<>();
+		params.put("questionnaire", questionnaire.toLowerCase());
+		try {
+			StreamingOutput stream = output -> {
+				try {
+					output.write(pipeline.from(request.getInputStream())
 							.map(lunaticJSONToUriStromaeV2::transform, params, questionnaire.toLowerCase()).transform().getBytes());
 				} catch (Exception e) {
 					logger.error(e.getMessage());
