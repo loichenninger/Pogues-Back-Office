@@ -30,7 +30,7 @@ public class LunaticJSONToUriStromaeV2Imp implements LunaticJSONToUriStromaeV2{
 	@Value("${fr.insee.pogues.api.scheme}")// http
 	private String apiScheme;
 	
-	@Value("${fr.insee.pogues.api.remote.stromaev2.vis.url}")// http
+	@Value("${fr.insee.pogues.api.remote.stromaev2.vis.url}")
 	private String uriStromaeV2;
 
 	@Override

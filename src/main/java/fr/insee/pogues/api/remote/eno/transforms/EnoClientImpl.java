@@ -94,9 +94,19 @@ public class EnoClientImpl implements EnoClient{
 	
 	@Override
 	public String getDDITOLunaticJSON(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException {
-		String enoEndpointUrl = BASE_PATH+"/lunatic-json-flat?parsingXpathVTL="+params.get("xpath");
-		logger.info("[Transformation DDItoLunaticJson] Eno call url : "+enoEndpointUrl);
-		HttpEntity entityResponse = callEnoApi(fileInput, enoEndpointUrl);
+		String WSPath = BASE_PATH+"/lunatic-json-flat";
+		URIBuilder uriBuilder = new URIBuilder();
+		uriBuilder.setScheme(enoScheme).setHost(enoHost).setPath(WSPath).setParameter("parsingXpathVTL", params.get("xpath").toString());
+		
+		CloseableHttpClient httpclient = HttpClients.createDefault();		
+		HttpPost post = new HttpPost(uriBuilder.build());
+		logger.info(uriBuilder.build().toString());
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+		builder.addBinaryBody("in", fileInput, ContentType.DEFAULT_BINARY, fileInput.getName());
+		HttpEntity entity = builder.build();
+		post.setEntity(entity);
+		HttpResponse response = httpclient.execute(post);
+		HttpEntity entityResponse = response.getEntity();
         return EntityUtils.toString(entityResponse, FORMAT);
 	}
 	
@@ -129,6 +139,7 @@ public class EnoClientImpl implements EnoClient{
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();		
 		HttpPost post = new HttpPost(uriBuilder.build());
+		logger.info(uriBuilder.build().toString());
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.addBinaryBody("in", fileInput, ContentType.DEFAULT_BINARY, fileInput.getName());
 		HttpEntity entity = builder.build();
