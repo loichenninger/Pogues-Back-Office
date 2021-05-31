@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -92,8 +93,10 @@ public class EnoClientImpl implements EnoClient{
 	}
 	
 	@Override
-	public String getDDITOLunaticJSON(File fileInput) throws URISyntaxException, ClientProtocolException, IOException {
-		HttpEntity entityResponse = callEnoApi(fileInput, BASE_PATH+"/lunatic-json-flat");
+	public String getDDITOLunaticJSON(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException {
+		String enoEndpointUrl = BASE_PATH+"/lunatic-json-flat?parsingXpathVTL="+params.get("xpath");
+		logger.info("[Transformation DDItoLunaticJson] Eno call url : "+enoEndpointUrl);
+		HttpEntity entityResponse = callEnoApi(fileInput, enoEndpointUrl);
         return EntityUtils.toString(entityResponse, FORMAT);
 	}
 	
