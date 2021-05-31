@@ -151,10 +151,23 @@ public class PoguesTransforms {
 			description = "JSON representation of the Pogues Model",
 			content = @Content(mediaType = "application/json")
 			)
+	@Parameters(value= {
+			@Parameter(
+					in = ParameterIn.QUERY, 
+					name = "xpath", 
+					description="The transformation from Xpath to VTL is needed",
+					schema=@Schema(type="string",allowableValues = {"true","false"},defaultValue = "true")),
+	})
 	public Response visualizeQueenFromBody(@Context final HttpServletRequest request,
 			@PathParam(value = "questionnaire") String questionnaire) throws Exception {
 		PipeLine pipeline = new PipeLine();
 		Map<String, Object> params = new HashMap<>();
+		if (request.getParameter("xpath") != null) {
+			params.put("xpath", request.getParameter("xpath"));
+		} else {
+			params.put("xpath", "true");
+		}
+		logger.info("Parsing from Xpath to VTL needed : "+params.get("xpath"));
 		params.put("questionnaire", questionnaire.toLowerCase());
 		try {
 			StreamingOutput stream = output -> {
