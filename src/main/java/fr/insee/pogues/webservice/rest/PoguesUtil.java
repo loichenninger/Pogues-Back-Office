@@ -45,7 +45,7 @@ public class PoguesUtil {
 
 
     @POST
-    @Path("Xpath2VTL")
+    @Path("util/Xpath2VTL/questionnaire")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(
             value = "Parsing pogues questionnaire Xpath formulas into VTL formulas",
