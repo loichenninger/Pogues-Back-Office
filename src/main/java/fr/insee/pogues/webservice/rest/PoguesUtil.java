@@ -62,7 +62,7 @@ public class PoguesUtil {
         	
         	String xml = jSONToXML.transform(json, null, null);
         	
-        	String possibleNodes = "(Expression|Formula|Minimum|Maximum)";
+        	String possibleNodes = "(Expression|Formula|Minimum|Maximum|Filter)";
     		Pattern pattern = Pattern.compile("(<"+possibleNodes+">)((.)*?)(</"+possibleNodes+">)");
 
     		Matcher matcher = pattern.matcher(xml);
