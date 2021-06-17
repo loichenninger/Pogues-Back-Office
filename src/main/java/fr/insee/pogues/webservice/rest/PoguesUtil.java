@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,9 +72,17 @@ public class PoguesUtil {
             String encoding = StandardCharsets.UTF_8.name();
             IOUtils.copy(request.getInputStream(), writer, encoding);
         	String json = writer.toString();
+        	
+        	//We need to store the value for the owner and lastUpdatedDate as the transformation doesn't carry the information
+        	JSONParser parser = new JSONParser();
+			JSONObject questionnaire = (JSONObject) parser.parse(json);
+			String owner = questionnaire.get("owner").toString();
+			String lastUpdatedDate = questionnaire.get("lastUpdatedDate").toString();
+			logger.info("Owner : "+owner+" and lastUpdatedDate: "+lastUpdatedDate);
+			
         	String xml = jSONToXML.transform(json, null, null);
         	String possibleNodes = "(Expression|Formula|Minimum|Maximum|Filter)";
-    		Pattern pattern = Pattern.compile("(<"+possibleNodes+">)((.)*?)(</"+possibleNodes+">)");
+    		Pattern pattern = Pattern.compile("(<"+possibleNodes+">)((.|\n)*?)(</"+possibleNodes+">)");
     		
     		Matcher matcher = pattern.matcher(xml);
     		StringBuffer stringBuffer = new StringBuffer();
@@ -90,9 +100,11 @@ public class PoguesUtil {
     		}
     		matcher.appendTail(stringBuffer);
     		String xmlOut = stringBuffer.toString();
-    		
     		String jsonf = xMLToJSON.transform(xmlOut, null, null);
-        	return jsonf;
+    		JSONObject questionnaireOut = (JSONObject) parser.parse(jsonf);
+    		questionnaireOut.put("owner",owner);
+    		questionnaireOut.put("lastUpdatedDate",lastUpdatedDate);
+        	return questionnaireOut.toJSONString();
         } catch (PoguesException e) {
             logger.error(e.getMessage(), e);
             throw e;
