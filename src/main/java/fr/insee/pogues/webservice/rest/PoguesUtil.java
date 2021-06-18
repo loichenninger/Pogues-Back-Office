@@ -23,8 +23,6 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.io.UTF8Writer;
-
 import fr.insee.pogues.transforms.JSONToXML;
 import fr.insee.pogues.transforms.XMLToJSON;
 import io.swagger.annotations.Api;
@@ -51,8 +49,9 @@ public class PoguesUtil {
 
     final static Logger logger = LogManager.getLogger(PoguesUtil.class);
 
-
-    @POST
+    //No way to parameterize org.json.simple.JSONOBject by its design. It is the only way to suppress the warnings on questionnaireOut.put()
+    @SuppressWarnings("unchecked")
+	@POST
     @Path("Xpath2VTL/questionnaire")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
