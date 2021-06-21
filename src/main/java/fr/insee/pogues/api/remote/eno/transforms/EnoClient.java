@@ -3,6 +3,7 @@ package fr.insee.pogues.api.remote.eno.transforms;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -30,6 +31,8 @@ public interface EnoClient {
 	String getDDITOLunaticJSON(File fileInput) throws URISyntaxException, ClientProtocolException, IOException;
 	
 	String getDDITOXForms(File fileInput) throws URISyntaxException, ClientProtocolException, IOException;
+	
+	String getXpathToVTL(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException;
 	
 	void getParameters () throws Exception;
 

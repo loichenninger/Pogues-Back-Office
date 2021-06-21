@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -108,6 +109,23 @@ public class EnoClientImpl implements EnoClient{
 		HttpEntity entityResponse = callEnoApi(fileInput, BASE_PATH+"/fodt");
         return EntityUtils.toString(entityResponse, FORMAT);
 	};
+	
+	@Override
+	public String getXpathToVTL(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException {
+		URIBuilder uriBuilder = new URIBuilder();
+		uriBuilder.setScheme(enoScheme).setHost(enoHost).setPath(BASE_PATH+"/xpath-2-vtl/file").setParameter("nodes", params.get("nodes").toString());
+		
+		CloseableHttpClient httpclient = HttpClients.createDefault();		
+		HttpPost post = new HttpPost(uriBuilder.build());
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+		builder.addBinaryBody("in", fileInput, ContentType.DEFAULT_BINARY, fileInput.getName());
+		HttpEntity entity = builder.build();
+		post.setEntity(entity);
+		HttpResponse response = httpclient.execute(post);
+		
+		HttpEntity entityResponse = response.getEntity();
+        return EntityUtils.toString(entityResponse, FORMAT);
+	}
 	
 	
 	@Override

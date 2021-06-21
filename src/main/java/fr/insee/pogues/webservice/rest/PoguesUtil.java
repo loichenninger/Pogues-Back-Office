@@ -1,11 +1,9 @@
 package fr.insee.pogues.webservice.rest;
 
-import static fr.insee.pogues.utils.json.XPathVTL.parseToVTL;
-
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -14,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.insee.pogues.transforms.JSONToXML;
+import fr.insee.pogues.transforms.PipeLine;
 import fr.insee.pogues.transforms.XMLToJSON;
+import fr.insee.pogues.transforms.XpathToVTL;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,10 +39,13 @@ import io.swagger.annotations.ApiResponses;
 public class PoguesUtil {
 
 	@Autowired
-	JSONToXML jSONToXML;
+	private JSONToXML jSONToXML;
 	
 	@Autowired
-	XMLToJSON xMLToJSON;
+	private XMLToJSON xMLToJSON;
+	
+	@Autowired
+	private XpathToVTL xpathToVTL;
 
     @Context
     HttpServletRequest request;
@@ -67,6 +71,9 @@ public class PoguesUtil {
     })
     public String parseQuestionnaireXptah2VTL(@Context final HttpServletRequest request) throws Exception {
         try {
+        	PipeLine pipeline = new PipeLine();
+        	String questionnaireName = "VTL";
+        	
         	StringWriter writer = new StringWriter();
             String encoding = StandardCharsets.UTF_8.name();
             IOUtils.copy(request.getInputStream(), writer, encoding);
@@ -81,24 +88,28 @@ public class PoguesUtil {
 			
         	String xml = jSONToXML.transform(json, null, null);
         	String possibleNodes = "(Expression|Formula|Minimum|Maximum|Filter)";
-    		Pattern pattern = Pattern.compile("(<"+possibleNodes+">)((.|\n)*?)(</"+possibleNodes+">)");
+        	
+        	Map<String, Object> params = new HashMap<>();
+    		params.put("nodes", possibleNodes);
     		
-    		Matcher matcher = pattern.matcher(xml);
-    		StringBuffer stringBuffer = new StringBuffer();
-    		while(matcher.find()){
-    			//matcher.group(0)=all expression
-    			//matcher.group(1)=start of xml node ex:<label>
-    			//matcher.group(2)=name of xml node ex:label
-    			//matcher.group(3)=content of xml node
-    			//matcher.group(4)=last char in group(3) ?
-    			//matcher.group(5)=end of xml node ex:</label>
-    			//matcher.group(6)=name of xml node ex:label
-    			String replacement = matcher.group(1) + parseToVTL(matcher.group(3)) + matcher.group(5);
-    			matcher.appendReplacement(stringBuffer,"");
-    			stringBuffer.append(replacement);
+    		String xmlOut="";
+    		try {
+    			StreamingOutput stream = output -> {
+    				try {
+    					output.write(pipeline.from(request.getInputStream())
+    							.map(xpathToVTL::transform, params,questionnaireName).transform().getBytes());
+    				} catch (Exception e) {
+    					logger.error(e.getMessage());
+    					throw new PoguesException(500, e.getMessage(), null);
+    				}
+    			};
+    			xmlOut = stream.toString();
+    		} catch (Exception e) {
+    			logger.error(e.getMessage(), e);
+    			throw e;
     		}
-    		matcher.appendTail(stringBuffer);
-    		String xmlOut = stringBuffer.toString();
+    		
+
     		String jsonf = xMLToJSON.transform(xmlOut, null, null);
     		JSONObject questionnaireOut = (JSONObject) parser.parse(jsonf);
     		questionnaireOut.put("owner",owner);
