@@ -1,5 +1,7 @@
 package fr.insee.pogues.webservice.rest;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -87,8 +89,8 @@ public class PoguesUtil {
 			logger.info("Owner : "+owner+" and lastUpdatedDate: "+lastUpdatedDate);
 			
         	String xml = jSONToXML.transform(json, null, null);
+        	        	
         	String possibleNodes = "(Expression|Formula|Minimum|Maximum|Filter)";
-        	
         	Map<String, Object> params = new HashMap<>();
     		params.put("nodes", possibleNodes);
     		
@@ -96,24 +98,26 @@ public class PoguesUtil {
     		try {
     			StreamingOutput stream = output -> {
     				try {
-    					output.write(pipeline.from(request.getInputStream())
-    							.map(xpathToVTL::transform, params,questionnaireName).transform().getBytes());
+    					output.write(pipeline.from(new ByteArrayInputStream(xml.getBytes()))
+    							.map(xpathToVTL::transform, params, questionnaireName).transform().getBytes());
     				} catch (Exception e) {
     					logger.error(e.getMessage());
     					throw new PoguesException(500, e.getMessage(), null);
     				}
     			};
-    			xmlOut = stream.toString();
+    			ByteArrayOutputStream StringOutput = new ByteArrayOutputStream();
+    			stream.write(StringOutput);
+    			xmlOut = new String(StringOutput.toByteArray(), "UTF-8");
     		} catch (Exception e) {
     			logger.error(e.getMessage(), e);
     			throw e;
-    		}
-    		
-
+    		}	
     		String jsonf = xMLToJSON.transform(xmlOut, null, null);
     		JSONObject questionnaireOut = (JSONObject) parser.parse(jsonf);
+    		
     		questionnaireOut.put("owner",owner);
     		questionnaireOut.put("lastUpdatedDate",lastUpdatedDate);
+    		
         	return questionnaireOut.toJSONString();
         } catch (PoguesException e) {
             logger.error(e.getMessage(), e);

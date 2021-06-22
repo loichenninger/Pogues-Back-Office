@@ -41,6 +41,7 @@ public class EnoClientImpl implements EnoClient{
 	
 	private static final String FORMAT = "UTF-8";
 	private static final String BASE_PATH = "/questionnaire/DEFAULT";
+	private static final String UTIL_PATH = "/util";
 	
 	@Override
 	public String getDDI32ToDDI33 (File fileInput) throws Exception{
@@ -112,9 +113,9 @@ public class EnoClientImpl implements EnoClient{
 	
 	@Override
 	public String getXpathToVTL(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException {
+		logger.info("Call ENO-WS : "+ UTIL_PATH +"/xpath-2-vtl/file");
 		URIBuilder uriBuilder = new URIBuilder();
-		uriBuilder.setScheme(enoScheme).setHost(enoHost).setPath(BASE_PATH+"/xpath-2-vtl/file").setParameter("nodes", params.get("nodes").toString());
-		
+		uriBuilder.setScheme(enoScheme).setHost(enoHost).setPath(UTIL_PATH+"/xpath-2-vtl/file").setParameter("nodes", params.get("nodes").toString());
 		CloseableHttpClient httpclient = HttpClients.createDefault();		
 		HttpPost post = new HttpPost(uriBuilder.build());
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();

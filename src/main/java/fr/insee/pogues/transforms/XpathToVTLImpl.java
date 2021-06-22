@@ -8,9 +8,11 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import fr.insee.pogues.api.remote.eno.transforms.EnoClient;
 
+@Service
 public class XpathToVTLImpl implements XpathToVTL{
 	
 	@Autowired
