@@ -32,6 +32,8 @@ public interface EnoClient {
 	
 	String getDDITOXForms(File fileInput) throws URISyntaxException, ClientProtocolException, IOException;
 	
+	String getXpathToVTL(File fileInput, Map<String, Object> params) throws URISyntaxException, ClientProtocolException, IOException;
+	
 	void getParameters () throws Exception;
 
 }
